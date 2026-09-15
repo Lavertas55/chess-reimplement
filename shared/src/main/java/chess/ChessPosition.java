@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Objects;
+
 /**
  * Represents a single square position on a chess board
  * <p>
@@ -9,6 +11,8 @@ package chess;
 public class ChessPosition {
 
     public ChessPosition(int row, int col) {
+        this.row = row;
+        this.col = col;
     }
 
     /**
@@ -16,7 +20,7 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-        throw new RuntimeException("Not implemented");
+        return row;
     }
 
     /**
@@ -24,6 +28,38 @@ public class ChessPosition {
      * 1 codes for the left column
      */
     public int getColumn() {
-        throw new RuntimeException("Not implemented");
+        return col;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, col);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ChessPosition &&
+                row == ((ChessPosition) obj).getRow() &&
+                col == ((ChessPosition) obj).getColumn();
+    }
+
+    @Override
+    public String toString() {
+        String colStr = switch (col) {
+            case 1 -> "a";
+            case 2 -> "b";
+            case 3 -> "c";
+            case 4 -> "d";
+            case 5 -> "e";
+            case 6 -> "f";
+            case 7 -> "g";
+            case 8 -> "h";
+            default -> throw new IllegalStateException("Unexpected value: " + col);
+        };
+        
+        return "[%s%d]".formatted(colStr, row);
+    }
+
+    final private int row;
+    final private int col;
 }
