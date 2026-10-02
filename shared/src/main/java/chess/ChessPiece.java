@@ -1,6 +1,8 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -52,6 +54,39 @@ public class ChessPiece {
         throw new RuntimeException("Not implemented");
     }
 
+    @Override
+    public String toString() {
+        String pieceTypeString = pieceTypeToString.get(pieceType);
+        if (pieceColor == ChessGame.TeamColor.BLACK) {
+            pieceTypeString = pieceTypeString.toLowerCase();
+        }
+
+        return pieceTypeString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ChessPiece that)) {
+            return false;
+        }
+        return this.pieceColor == that.pieceColor && this.pieceType == that.pieceType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, pieceType);
+    }
+
     final private ChessGame.TeamColor pieceColor;
     final private PieceType pieceType;
+    final static private HashMap<PieceType, String> pieceTypeToString = new HashMap<>() {
+        {
+            put(PieceType.KING, "K");
+            put(PieceType.QUEEN, "Q");
+            put(PieceType.BISHOP, "B");
+            put(PieceType.KNIGHT, "N");
+            put(PieceType.ROOK, "R");
+            put(PieceType.PAWN, "P");
+        }
+    };
 }
