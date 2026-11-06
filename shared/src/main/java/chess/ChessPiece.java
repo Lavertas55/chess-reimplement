@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
 
+import chess.piecemoves.MoveCalculator;
+
 /**
  * Represents a single chess piece
  * <p>
@@ -51,7 +53,11 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        if (pieceType != PieceType.PAWN) {
+            return MoveCalculator.calculateMoves(myPosition, board);
+        }
+
+        throw new RuntimeException("pawn not implemented yet");
     }
 
     @Override
