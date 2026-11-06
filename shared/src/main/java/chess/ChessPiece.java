@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import chess.piecemoves.MoveCalculator;
+import chess.piecemoves.PawnMoveCalculator;
 
 /**
  * Represents a single chess piece
@@ -57,7 +58,7 @@ public class ChessPiece {
             return MoveCalculator.calculateMoves(myPosition, board);
         }
 
-        throw new RuntimeException("pawn not implemented yet");
+        return PawnMoveCalculator.calculateMoves(myPosition, board);
     }
 
     @Override
@@ -85,6 +86,7 @@ public class ChessPiece {
 
     final private ChessGame.TeamColor pieceColor;
     final private PieceType pieceType;
+
     final static private HashMap<PieceType, String> pieceTypeToString = new HashMap<>() {
         {
             put(PieceType.KING, "K");
