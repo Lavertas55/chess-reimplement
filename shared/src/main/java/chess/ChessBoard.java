@@ -95,12 +95,12 @@ public class ChessBoard {
         if (!(o instanceof ChessBoard that)) {
             return false;
         }
-        return Arrays.equals(board, that.board);
+        return Arrays.deepEquals(board, that.board);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(board);
+        return Arrays.deepHashCode(board);
     }
 
     final private static int BOARD_ROWS = 8;
