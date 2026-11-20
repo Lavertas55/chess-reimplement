@@ -45,6 +45,11 @@ public class ChessGame implements Cloneable {
         BLACK
     }
 
+    private Collection<ChessMove> candidateMoves(ChessPosition startPosition) {
+        ChessPiece piece = board.getPiece(startPosition);
+        return piece.pieceMoves(board, startPosition);
+    }
+
     /**
      * Gets all valid moves for a piece at the given location
      *
@@ -53,7 +58,38 @@ public class ChessGame implements Cloneable {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        
+        Collection<ChessMove> possibleMoves = candidateMoves(startPosition);
+        Collection<ChessMove> result = new ArrayList<>();
+
+        TeamColor currentColor = board.getPiece(startPosition).getTeamColor();
+
+        for (ChessMove move : possibleMoves) {
+            ChessGame testGame = clone();
+            testGame.executeMove(move);
+
+            if (!testGame.isInCheck(currentColor)) {
+                result.add(move);        
+            }
+        }
+
+        return result;
+    }
+
+    private void executeMove(ChessMove move) {
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+
+        ChessPiece piece;
+        ChessPiece.PieceType promotionType = move.getPromotionPiece();
+        if (promotionType != null) {
+            piece = new ChessPiece(teamTurn, promotionType);
+        } else {
+            piece = board.getPiece(startPosition);
+        }
+
+        board.addPiece(startPosition, null);
+        board.addPiece(endPosition, piece);
     }
 
     /**
@@ -73,7 +109,29 @@ public class ChessGame implements Cloneable {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition kingPosition = null;
+        Collection<ChessMove> enemyMoves = new ArrayList<>();
+
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPiece currentPiece = board.getPiece(new ChessPosition(row, col));
+                ChessPosition currentPosition = new ChessPosition(row, col);
+
+                if (currentPiece == null) continue;
+
+                if (currentPiece.getTeamColor().equals(teamColor) && currentPiece.getPieceType().equals(ChessPiece.PieceType.KING)) {
+                    kingPosition = new ChessPosition(row, col);
+                } else if (!currentPiece.getTeamColor().equals(teamColor)) {
+                    enemyMoves.addAll(currentPiece.pieceMoves(board, currentPosition));
+                }
+            }
+        }
+
+        for (ChessMove move : enemyMoves) {
+            if (move.getEndPosition().equals(kingPosition)) return true;
+        }
+
+        return false;
     }
 
     /**
