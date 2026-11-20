@@ -13,7 +13,7 @@ import chess.piecemoves.PawnMoveCalculator;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessPiece {
+public class ChessPiece implements Cloneable {
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
@@ -59,6 +59,11 @@ public class ChessPiece {
         }
 
         return PawnMoveCalculator.calculateMoves(myPosition, board);
+    }
+
+    @Override
+    public ChessPiece clone() throws CloneNotSupportedException {
+        return (ChessPiece) super.clone();
     }
 
     @Override
