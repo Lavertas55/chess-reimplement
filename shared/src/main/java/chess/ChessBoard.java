@@ -8,7 +8,7 @@ import java.util.Arrays;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
+public class ChessBoard implements Cloneable {
 
     /**
      * Adds a chess piece to the chessboard
@@ -72,9 +72,29 @@ public class ChessBoard {
     }
 
     @Override 
+    public ChessBoard clone() throws CloneNotSupportedException {
+        ChessBoard cloneBoard = (ChessBoard) super.clone();
+        ChessPiece[][] cloneArray = new ChessPiece[BOARD_ROWS][BOARD_COLS];
+
+        cloneBoard.board = cloneArray;
+        for (int row = 0; row < BOARD_ROWS; row++) {
+            for (int col=0; col < BOARD_COLS; col++) {
+                ChessPiece currentPiece = board[row][col];
+
+                ChessPiece clonePiece = null;
+                if (currentPiece != null) clonePiece = currentPiece.clone();
+                
+                cloneArray[row][col] = clonePiece;
+            }
+        }
+
+        return cloneBoard;
+    }
+
+    @Override 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < BOARD_ROWS; i++) {
+        for (int i = BOARD_ROWS - 1; i >= 0; i--) {
             sb.append("|");
             for (int j = 0; j < BOARD_COLS; j++) {
                 ChessPiece piece = board[i][j];
@@ -106,5 +126,5 @@ public class ChessBoard {
     final private static int BOARD_ROWS = 8;
     final private static int BOARD_COLS = 8;
 
-    final private ChessPiece[][] board = new ChessPiece[BOARD_ROWS][BOARD_COLS];
+    private ChessPiece[][] board = new ChessPiece[BOARD_ROWS][BOARD_COLS];
 }
